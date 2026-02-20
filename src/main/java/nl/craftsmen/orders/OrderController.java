@@ -32,7 +32,11 @@ public class OrderController {
             throw new IllegalArgumentException("Quantity must be positive");
         }
 
-        // Call external inventory service directly
+
+        if (quantity > 100) {
+            throw new IllegalArgumentException("Quantity cannot be bigger than 100");
+        }
+
         Boolean inStock = restTemplate.getForObject(
                 "http://localhost:8089/api/stock/" + productId,
                 Boolean.class
@@ -46,10 +50,11 @@ public class OrderController {
         order.setProductId(productId);
         order.setQuantity(quantity);
         order.setTotalPrice(BigDecimal.valueOf(quantity * 10));
-        order.setStatus("CREATED");
+        order.setStatus("OPEN");
 
         OrderEntity saved = repository.save(order);
 
+        saved.setStatus("CREATED");
         kafkaTemplate.send("orders.created", saved);
         return saved;
 

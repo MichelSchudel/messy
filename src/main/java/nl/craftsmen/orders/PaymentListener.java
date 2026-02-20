@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 public class PaymentListener {
 
     private final OrderRepository repository;
+    private final OrderService service;
 
-    public PaymentListener(OrderRepository repository) {
+    public PaymentListener(OrderRepository repository, OrderService service) {
         this.repository = repository;
+        this.service = service;
     }
 
     @KafkaListener(
@@ -20,7 +22,6 @@ public class PaymentListener {
     )    public void handlePaymentConfirmed(@Payload @Valid StatusUpdateMessage message) {
         OrderEntity order = repository.findById(message.getOrderId())
                 .orElseThrow();
-        order.setStatus(message.getStatusUpdate());
-        repository.save(order);
+        service.setStatusAndUpdate(order, message.getStatusUpdate());
     }
 }

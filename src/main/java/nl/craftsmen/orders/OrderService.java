@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -49,5 +50,12 @@ public class OrderService {
 
     public List<OrderEntity> getAllOrders() {
         return repository.findAll();
+    }
+
+    public void setStatusAndUpdate(OrderEntity orderEntity, String statusUpdate) {
+        var statusMap = Map.of("CONFIRMED", "DONE",
+                "IN_PROGRESS", "PENDING");
+        orderEntity.setStatus(statusMap.get(statusUpdate));
+        repository.save(orderEntity);
     }
 }

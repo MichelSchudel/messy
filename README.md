@@ -13,11 +13,14 @@
 * Rename a field in OrderEntity (e.g., quantity → qty)
 * Show that:
 * API response breaks
-* Tests fail
-* Controller code is affected
+* Tests do not fail
 * Try to fix it with jsonproperty and show why this is not a good idea
 
 ###  Show infrastructure leakage
 * Highlight RestTemplate inside service
 * KafkaTemplate directly in service
 * Ask: “What if we switch to another inventory service?”
+
+### Show listener data leakage
+* Show that Paymentlistner is leaking status into domain layer
+* Show what would need to be changed to fix it (both domain and infrastructure)

@@ -78,7 +78,7 @@ class OrderFlowSpringBootIT {
                 .untilAsserted(() -> {
                     OrderEntity reloaded =
                             orderRepository.findById(created.getId()).orElseThrow();
-                    assertThat(reloaded.getStatus()).isEqualTo("CONFIRMED");
+                    assertThat(reloaded.getStatus()).isEqualTo("DONE");
                 });
     }
 }
