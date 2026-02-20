@@ -1,4 +1,4 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

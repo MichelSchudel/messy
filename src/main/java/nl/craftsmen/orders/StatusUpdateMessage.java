@@ -1,4 +1,4 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
 public class StatusUpdateMessage {
     private Long orderId;

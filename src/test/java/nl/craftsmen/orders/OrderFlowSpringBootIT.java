@@ -1,4 +1,4 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;

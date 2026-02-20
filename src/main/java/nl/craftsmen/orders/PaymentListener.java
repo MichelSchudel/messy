@@ -1,4 +1,4 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
 import jakarta.validation.Valid;
 import org.springframework.kafka.annotation.KafkaListener;

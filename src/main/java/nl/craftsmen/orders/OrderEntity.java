@@ -1,4 +1,4 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

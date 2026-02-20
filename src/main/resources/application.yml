@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    serialization:
+      indent-output: true
   datasource:
     url: jdbc:postgresql://localhost:5432/orders
     username: postgres
@@ -19,4 +22,4 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.example.orders
+        spring.json.trusted.packages: nl.craftsmen.orders

@@ -1,26 +1,32 @@
-package com.example.orders;
+package nl.craftsmen.orders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-@Service
-public class OrderService {
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
 
     private final OrderRepository repository;
     private final KafkaTemplate<String, OrderEntity> kafkaTemplate;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public OrderService(OrderRepository repository, KafkaTemplate<String, OrderEntity> kafkaTemplate) {
+    public OrderController(
+            OrderService service,
+            OrderRepository repository,
+            KafkaTemplate<String, OrderEntity> kafkaTemplate
+    ) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public OrderEntity placeOrder(String productId, int quantity) {
+    @PostMapping
+    public OrderEntity placeOrder(@RequestParam String productId,
+                                  @RequestParam int quantity) {
 
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
@@ -46,5 +52,12 @@ public class OrderService {
 
         kafkaTemplate.send("orders.created", saved);
         return saved;
+
     }
+
+    @GetMapping
+    public List<OrderEntity> getAllOrders() {
+        return repository.findAll();
+    }
+
 }
