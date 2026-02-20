@@ -71,9 +71,8 @@ class OrderFlowSpringBootIT {
                 "payments.statusupdate", msg
         ).get();
 
-        // Assert: eventually the listener updates the DB row
         Awaitility.await()
-                .atMost(Duration.ofSeconds(10))
+                .atMost(Duration.ofSeconds(1))
                 .pollInterval(Duration.ofMillis(200))
                 .untilAsserted(() -> {
                     OrderEntity reloaded =

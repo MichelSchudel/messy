@@ -22,6 +22,7 @@ class OrderServiceTest {
 
     @InjectMocks
     private OrderService service;
+
     @Test
     void test() {
         service.setStatusAndUpdate(new OrderEntity(), "CONFIRMED");
