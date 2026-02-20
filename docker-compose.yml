@@ -1,0 +1,52 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: orders-postgres
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redpanda:
+    image: redpandadata/redpanda:latest
+    container_name: orders-redpanda
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp 1
+      - --memory 512M
+      - --reserve-memory 0M
+      - --node-id 0
+      - --check=false
+      - --kafka-addr PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://localhost:9092
+    ports:
+      - "9092:9092"
+      - "9644:9644"
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+  inventory-mock:
+    image: wiremock/wiremock:3.5.4
+    container_name: inventory-mock
+    ports:
+      - "8089:8080"
+    volumes:
+      - ./wiremock:/home/wiremock
+  redpanda-console:
+    image: redpandadata/console:latest
+    container_name: redpanda-console
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+    depends_on:
+    - redpanda
+volumes:
+  postgres_data:
+  redpanda_data:

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/api/stock/.*"
+  },
+  "response": {
+    "status": 200,
+    "body": "true",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
