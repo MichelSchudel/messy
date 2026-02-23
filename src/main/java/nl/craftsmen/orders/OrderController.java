@@ -1,10 +1,7 @@
 package nl.craftsmen.orders;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -12,18 +9,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderRepository repository;
-    private final KafkaTemplate<String, OrderEntity> kafkaTemplate;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final OrderService orderService;
 
     public OrderController(
-            OrderService service,
             OrderRepository repository,
-            KafkaTemplate<String, OrderEntity> kafkaTemplate,
             OrderService orderService
     ) {
         this.repository = repository;
-        this.kafkaTemplate = kafkaTemplate;
         this.orderService = orderService;
     }
 

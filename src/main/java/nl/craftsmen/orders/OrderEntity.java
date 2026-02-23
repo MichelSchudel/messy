@@ -13,7 +13,6 @@ public class OrderEntity {
 
     private String productId;
     private int quantity;
-    @JsonProperty("price")
     private BigDecimal totalPrice;
     private String status;
 
