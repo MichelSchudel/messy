@@ -1,11 +1,12 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.application;
 
+import nl.craftsmen.orders.OrderEntity;
+import nl.craftsmen.orders.OrderRepository;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 @Service

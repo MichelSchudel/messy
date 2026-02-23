@@ -1,6 +1,7 @@
 package nl.craftsmen.orders;
 
 import jakarta.validation.Valid;
+import nl.craftsmen.orders.application.OrderService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
