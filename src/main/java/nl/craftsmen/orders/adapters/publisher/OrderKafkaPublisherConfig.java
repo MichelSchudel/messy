@@ -1,4 +1,4 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.publisher;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -14,33 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaProducerConfig {
+public class OrderKafkaPublisherConfig {
 
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
-    @Bean
-    public ProducerFactory<String, StatusUpdateMessage> producerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapAddress);
-        configProps.put(
-                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                StringSerializer.class);
-        configProps.put(
-                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JacksonJsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
-    }
 
     @Bean
-    public KafkaTemplate<String, StatusUpdateMessage> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-
-    @Bean
-    public ProducerFactory<String, OrderEntity> orderProducerFactory() {
+    public ProducerFactory<String, OrderMessage> orderProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -57,7 +38,7 @@ public class KafkaProducerConfig {
 
 
     @Bean
-    public KafkaTemplate<String, OrderEntity> orderEntityKafkaTemplate() {
+    public KafkaTemplate<String, OrderMessage> orderEntityKafkaTemplate() {
         return new KafkaTemplate<>(orderProducerFactory());
     }
 

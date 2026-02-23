@@ -1,14 +1,18 @@
 package nl.craftsmen.orders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.adapters.consumer.StatusUpdateMessage;
+import nl.craftsmen.orders.adapters.controller.OrderDto;
+import nl.craftsmen.orders.adapters.publisher.KafkaProducerTestConfig;
+import nl.craftsmen.orders.adapters.repository.OrderEntity;
+import nl.craftsmen.orders.adapters.repository.OrderJpaRepository;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 import org.wiremock.spring.EnableWireMock;
 
@@ -18,9 +22,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@Import(KafkaProducerTestConfig.class)
 @EnableWireMock
-class OrderFlowSpringBootIT {
+class ScenarioIT {
 
     @LocalServerPort
     int port;
@@ -29,9 +33,7 @@ class OrderFlowSpringBootIT {
     private KafkaTemplate<String, StatusUpdateMessage> kafkaTemplate;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private OrderJpaRepository orderJpaRepository;
 
     @Test
     void placesOrder_thenPaymentStatusUpdateTopicConfirmsIt() throws Exception {
@@ -49,23 +51,20 @@ class OrderFlowSpringBootIT {
                         .withBody("true")));
 
         // Act 1: place order via HTTP
-        OrderEntity created = restClient.post()
+        OrderDto created = restClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/orders")
                         .queryParam("productId", productId)
                         .queryParam("quantity", 2)
                         .build())
                 .retrieve()
-                .body(OrderEntity.class);
+                .body(OrderDto.class);
 
         assertThat(created).isNotNull();
-        assertThat(created.getId()).isNotNull();
-        assertThat(created.getStatus()).isEqualTo("CREATED");
+        assertThat(created.status()).isEqualTo("CREATED");
 
         // Act 2: publish payment confirmation
-        StatusUpdateMessage msg = new StatusUpdateMessage();
-        msg.setOrderId(created.getId());
-        msg.setStatusUpdate("CONFIRMED");
+        StatusUpdateMessage msg = new StatusUpdateMessage(created.id(), "CONFIRMED");
 
         kafkaTemplate.send(
                 "payments.statusupdate", msg
@@ -76,8 +75,10 @@ class OrderFlowSpringBootIT {
                 .pollInterval(Duration.ofMillis(200))
                 .untilAsserted(() -> {
                     OrderEntity reloaded =
-                            orderRepository.findById(created.getId()).orElseThrow();
+                            orderJpaRepository.findById(created.id()).orElseThrow();
                     assertThat(reloaded.getStatus()).isEqualTo("DONE");
                 });
     }
 }
+
+
