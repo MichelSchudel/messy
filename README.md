@@ -24,3 +24,6 @@
 ### Show listener data leakage
 * Show that Paymentlistner is leaking status into domain layer
 * Show what would need to be changed to fix it (both domain and infrastructure)
+
+## Steps to refactor
+1.

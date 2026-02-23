@@ -22,11 +22,6 @@ public class OrderService {
 
     public OrderEntity placeOrder(String productId, int quantity) {
 
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-
-        // Call external inventory service directly
         Boolean inStock = restTemplate.getForObject(
                 "http://localhost:8089/api/stock/" + productId,
                 Boolean.class
@@ -40,16 +35,14 @@ public class OrderService {
         order.setProductId(productId);
         order.setQuantity(quantity);
         order.setTotalPrice(BigDecimal.valueOf(quantity * 10));
-        order.setStatus("CREATED");
+        order.setStatus("OPEN");
 
         OrderEntity saved = repository.save(order);
 
+        saved.setStatus("CREATED");
+
         kafkaTemplate.send("orders.created", saved);
         return saved;
-    }
-
-    public List<OrderEntity> getAllOrders() {
-        return repository.findAll();
     }
 
     public void setStatusAndUpdate(OrderEntity orderEntity, String statusUpdate) {

@@ -14,14 +14,17 @@ public class OrderController {
     private final OrderRepository repository;
     private final KafkaTemplate<String, OrderEntity> kafkaTemplate;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final OrderService orderService;
 
     public OrderController(
             OrderService service,
             OrderRepository repository,
-            KafkaTemplate<String, OrderEntity> kafkaTemplate
+            KafkaTemplate<String, OrderEntity> kafkaTemplate,
+            OrderService orderService
     ) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
+        this.orderService = orderService;
     }
 
     @PostMapping
@@ -37,25 +40,8 @@ public class OrderController {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-        Boolean inStock = restTemplate.getForObject(
-                "http://localhost:8089/api/stock/" + productId,
-                Boolean.class
-        );
+        OrderEntity saved = orderService.placeOrder(productId, quantity);
 
-        if (inStock == null || !inStock) {
-            throw new RuntimeException("Product not in stock");
-        }
-
-        OrderEntity order = new OrderEntity();
-        order.setProductId(productId);
-        order.setQuantity(quantity);
-        order.setTotalPrice(BigDecimal.valueOf(quantity * 10));
-        order.setStatus("OPEN");
-
-        OrderEntity saved = repository.save(order);
-
-        saved.setStatus("CREATED");
-        kafkaTemplate.send("orders.created", saved);
         return saved;
 
     }
