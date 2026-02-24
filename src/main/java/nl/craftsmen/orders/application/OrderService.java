@@ -3,9 +3,9 @@ package nl.craftsmen.orders.application;
 import nl.craftsmen.orders.OrderEntity;
 import nl.craftsmen.orders.OrderRepository;
 import nl.craftsmen.orders.application.domain.Order;
+import nl.craftsmen.orders.application.ports.StockProvider;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,19 +16,17 @@ public class OrderService {
 
     private final OrderRepository repository;
     private final KafkaTemplate<String, OrderEntity> kafkaTemplate;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final StockProvider stockProvider;
 
-    public OrderService(OrderRepository repository, KafkaTemplate<String, OrderEntity> kafkaTemplate) {
+    public OrderService(OrderRepository repository, KafkaTemplate<String, OrderEntity> kafkaTemplate, StockProvider stockProvider) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
+        this.stockProvider = stockProvider;
     }
 
     public Order placeOrder(String productId, int quantity) {
 
-        Boolean inStock = restTemplate.getForObject(
-                "http://localhost:8089/api/stock/" + productId,
-                Boolean.class
-        );
+        Boolean inStock = stockProvider.isProductAvailable(productId);
 
         if (inStock == null || !inStock) {
             throw new RuntimeException("Product not in stock");
