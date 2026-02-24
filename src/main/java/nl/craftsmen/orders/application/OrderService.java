@@ -1,8 +1,7 @@
 package nl.craftsmen.orders.application;
 
-import nl.craftsmen.orders.adapters.repositories.OrderEntity;
-import nl.craftsmen.orders.adapters.repositories.OrderRepository;
 import nl.craftsmen.orders.application.domain.Order;
+import nl.craftsmen.orders.application.ports.OrderProvider;
 import nl.craftsmen.orders.application.ports.OrderPublisher;
 import nl.craftsmen.orders.application.ports.StockProvider;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,13 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    private final OrderRepository repository;
+    private final OrderProvider repository;
 
     private final StockProvider stockProvider;
 
     private final OrderPublisher orderPublisher;
 
-    public OrderService(OrderRepository repository, StockProvider stockProvider, OrderPublisher orderPublisher) {
+    public OrderService(OrderProvider repository, StockProvider stockProvider, OrderPublisher orderPublisher) {
         this.repository = repository;
         this.stockProvider = stockProvider;
         this.orderPublisher = orderPublisher;

@@ -1,4 +1,4 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.consumers;
 
 public class StatusUpdateMessage {
     private Long orderId;

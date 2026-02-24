@@ -2,7 +2,9 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.adapters.consumers.StatusUpdateMessage;
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
+import nl.craftsmen.orders.adapters.repositories.OrderJpaRepository;
 import nl.craftsmen.orders.application.domain.Order;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
