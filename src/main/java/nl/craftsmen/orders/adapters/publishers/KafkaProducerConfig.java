@@ -1,5 +1,7 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.publishers;
 
+import nl.craftsmen.orders.OrderEntity;
+import nl.craftsmen.orders.application.domain.Order;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +22,7 @@ public class KafkaProducerConfig {
     private String bootstrapAddress;
 
     @Bean
-    public ProducerFactory<String, OrderEntity> orderProducerFactory() {
+    public ProducerFactory<String, Order> orderProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -37,7 +39,7 @@ public class KafkaProducerConfig {
 
 
     @Bean
-    public KafkaTemplate<String, OrderEntity> orderEntityKafkaTemplate() {
+    public KafkaTemplate<String, Order> orderEntityKafkaTemplate() {
         return new KafkaTemplate<>(orderProducerFactory());
     }
 
