@@ -1,6 +1,7 @@
 package nl.craftsmen.orders;
 
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
+import nl.craftsmen.orders.adapters.repositories.OrderJpaRepository;
 import nl.craftsmen.orders.application.OrderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,13 +1,12 @@
 package nl.craftsmen.orders.adapters.repositories;
 
-import nl.craftsmen.orders.OrderJpaRepository;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class OrderRepository {
+public class OrderRepository implements nl.craftsmen.orders.application.ports.OrderProvider {
 
     private OrderJpaRepository repository;
 
@@ -15,15 +14,18 @@ public class OrderRepository {
         this.repository = repository;
     }
 
+    @Override
     public Order save(Order order) {
         return mapFromOrderEntity(repository.save(mapFromOrder(order)));
 
     }
 
+    @Override
     public List<Order> getAllOrders() {
         return repository.findAll().stream().map(this::mapFromOrderEntity).toList();
     }
 
+    @Override
     public Order getOrderById(Long orderId) {
         return mapFromOrderEntity(repository.findById(orderId).orElseThrow());
     }
