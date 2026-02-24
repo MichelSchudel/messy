@@ -9,6 +9,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class PaymentListener {
 
@@ -22,6 +24,8 @@ public class PaymentListener {
             topics = "payments.statusupdate",
             groupId = "orders-service"
     )    public void handlePaymentConfirmed(@Payload @Valid StatusUpdateMessage message) {
-        service.setStatusAndUpdate(message.getOrderId(), message.getStatusUpdate());
+        var statusMap = Map.of("CONFIRMED", "DONE",
+                "IN_PROGRESS", "PENDING");
+        service.setStatusAndUpdate(message.getOrderId(), statusMap.get(message.getStatusUpdate()));
     }
 }
