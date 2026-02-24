@@ -46,9 +46,10 @@ public class OrderService {
         return mapFromOrderEntity(saved);
     }
 
-    public void setStatusAndUpdate(OrderEntity orderEntity, String statusUpdate) {
+    public void setStatusAndUpdate(Long orderId, String statusUpdate) {
         var statusMap = Map.of("CONFIRMED", "DONE",
                 "IN_PROGRESS", "PENDING");
+        OrderEntity orderEntity = repository.findById(orderId).orElseThrow();
         orderEntity.setStatus(statusMap.get(statusUpdate));
         repository.save(orderEntity);
     }
