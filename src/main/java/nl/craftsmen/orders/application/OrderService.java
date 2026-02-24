@@ -2,8 +2,8 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.OrderEntity;
 import nl.craftsmen.orders.OrderRepository;
-import nl.craftsmen.orders.adapters.publishers.OrderKafkaPublisher;
 import nl.craftsmen.orders.application.domain.Order;
+import nl.craftsmen.orders.application.ports.OrderPublisher;
 import nl.craftsmen.orders.application.ports.StockProvider;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +17,12 @@ public class OrderService {
 
     private final StockProvider stockProvider;
 
-    private final OrderKafkaPublisher orderKafkaPublisher;
+    private final OrderPublisher orderPublisher;
 
-    public OrderService(OrderRepository repository, StockProvider stockProvider, OrderKafkaPublisher orderKafkaPublisher) {
+    public OrderService(OrderRepository repository, StockProvider stockProvider, OrderPublisher orderPublisher) {
         this.repository = repository;
         this.stockProvider = stockProvider;
-        this.orderKafkaPublisher = orderKafkaPublisher;
+        this.orderPublisher = orderPublisher;
     }
 
     public Order placeOrder(String productId, int quantity) {
@@ -43,7 +43,7 @@ public class OrderService {
 
         saved.setStatus("CREATED");
 
-        orderKafkaPublisher.publish(mapFromOrderEntity(saved));
+        orderPublisher.publish(mapFromOrderEntity(saved));
         return mapFromOrderEntity(saved);
     }
 
