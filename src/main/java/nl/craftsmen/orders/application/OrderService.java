@@ -2,26 +2,27 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.OrderEntity;
 import nl.craftsmen.orders.OrderRepository;
+import nl.craftsmen.orders.adapters.publishers.OrderKafkaPublisher;
 import nl.craftsmen.orders.application.domain.Order;
 import nl.craftsmen.orders.application.ports.StockProvider;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class OrderService {
 
     private final OrderRepository repository;
-    private final KafkaTemplate<String, OrderEntity> kafkaTemplate;
+
     private final StockProvider stockProvider;
 
-    public OrderService(OrderRepository repository, KafkaTemplate<String, OrderEntity> kafkaTemplate, StockProvider stockProvider) {
+    private final OrderKafkaPublisher orderKafkaPublisher;
+
+    public OrderService(OrderRepository repository, StockProvider stockProvider, OrderKafkaPublisher orderKafkaPublisher) {
         this.repository = repository;
-        this.kafkaTemplate = kafkaTemplate;
         this.stockProvider = stockProvider;
+        this.orderKafkaPublisher = orderKafkaPublisher;
     }
 
     public Order placeOrder(String productId, int quantity) {
@@ -42,7 +43,7 @@ public class OrderService {
 
         saved.setStatus("CREATED");
 
-        kafkaTemplate.send("orders.created", saved);
+        orderKafkaPublisher.publish(mapFromOrderEntity(saved));
         return mapFromOrderEntity(saved);
     }
 
