@@ -1,5 +1,6 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.controllers;
 
+import nl.craftsmen.orders.OrderRepository;
 import nl.craftsmen.orders.application.OrderService;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.web.bind.annotation.*;
