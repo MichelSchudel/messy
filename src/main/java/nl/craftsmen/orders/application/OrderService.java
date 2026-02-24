@@ -41,8 +41,6 @@ public class OrderService {
 
         OrderEntity saved = repository.save(order);
 
-        saved.setStatus("CREATED");
-
         orderPublisher.publish(mapFromOrderEntity(saved));
         return mapFromOrderEntity(saved);
     }

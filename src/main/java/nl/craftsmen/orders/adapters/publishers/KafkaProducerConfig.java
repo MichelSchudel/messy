@@ -22,7 +22,7 @@ public class KafkaProducerConfig {
     private String bootstrapAddress;
 
     @Bean
-    public ProducerFactory<String, Order> orderProducerFactory() {
+    public ProducerFactory<String, OrderMessage> orderProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -39,7 +39,7 @@ public class KafkaProducerConfig {
 
 
     @Bean
-    public KafkaTemplate<String, Order> orderEntityKafkaTemplate() {
+    public KafkaTemplate<String, OrderMessage> orderEntityKafkaTemplate() {
         return new KafkaTemplate<>(orderProducerFactory());
     }
 
