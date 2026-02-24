@@ -41,8 +41,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderEntity> getAllOrders() {
-        return repository.findAll();
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
 }

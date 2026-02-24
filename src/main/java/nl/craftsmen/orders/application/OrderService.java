@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -62,5 +63,9 @@ public class OrderService {
                 orderEntity.getTotalPrice(),
                 orderEntity.getStatus()
         );
+    }
+
+    public List<Order> getAllOrders() {
+        return repository.findAll().stream().map(this::mapFromOrderEntity).toList();
     }
 }
