@@ -9,4 +9,8 @@ public record Order(
         BigDecimal totalPrice,
         String status
 ) {
+
+    public Order withStatus(String status) {
+        return new Order(id, productId, quantity, totalPrice, status);
+    }
 }

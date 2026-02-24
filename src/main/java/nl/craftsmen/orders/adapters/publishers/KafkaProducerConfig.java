@@ -1,7 +1,5 @@
 package nl.craftsmen.orders.adapters.publishers;
 
-import nl.craftsmen.orders.OrderEntity;
-import nl.craftsmen.orders.application.domain.Order;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
