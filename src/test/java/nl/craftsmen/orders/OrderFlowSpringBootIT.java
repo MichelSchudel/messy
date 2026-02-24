@@ -2,6 +2,7 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.adapters.repositories.OrderEntity;
 import nl.craftsmen.orders.application.domain.Order;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class OrderFlowSpringBootIT {
     private KafkaTemplate<String, StatusUpdateMessage> kafkaTemplate;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderJpaRepository orderJpaRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,7 +62,7 @@ class OrderFlowSpringBootIT {
 
         assertThat(created).isNotNull();
         assertThat(created.id()).isNotNull();
-        assertThat(created.status()).isEqualTo("CREATED");
+        assertThat(created.status()).isEqualTo("OPEN");
 
         // Act 2: publish payment confirmation
         StatusUpdateMessage msg = new StatusUpdateMessage();
@@ -77,7 +78,7 @@ class OrderFlowSpringBootIT {
                 .pollInterval(Duration.ofMillis(200))
                 .untilAsserted(() -> {
                     OrderEntity reloaded =
-                            orderRepository.findById(created.id()).orElseThrow();
+                            orderJpaRepository.findById(created.id()).orElseThrow();
                     assertThat(reloaded.getStatus()).isEqualTo("DONE");
                 });
     }

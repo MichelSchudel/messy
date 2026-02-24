@@ -1,8 +1,6 @@
 package nl.craftsmen.orders.adapters.consumers;
 
 import jakarta.validation.Valid;
-import nl.craftsmen.orders.OrderEntity;
-import nl.craftsmen.orders.OrderRepository;
 import nl.craftsmen.orders.StatusUpdateMessage;
 import nl.craftsmen.orders.application.OrderService;
 import org.springframework.kafka.annotation.KafkaListener;

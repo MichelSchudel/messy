@@ -1,6 +1,6 @@
 package nl.craftsmen.orders.adapters.controllers;
 
-import nl.craftsmen.orders.OrderRepository;
+import nl.craftsmen.orders.OrderJpaRepository;
 import nl.craftsmen.orders.application.OrderService;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +11,11 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderRepository repository;
+    private final OrderJpaRepository repository;
     private final OrderService orderService;
 
     public OrderController(
-            OrderRepository repository,
+            OrderJpaRepository repository,
             OrderService orderService
     ) {
         this.repository = repository;

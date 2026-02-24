@@ -1,6 +1,5 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.repositories;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -17,6 +16,7 @@ public class OrderEntity {
     private String status;
 
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public String getProductId() { return productId; }
     public void setProductId(String productId) { this.productId = productId; }
     public int getQuantity() { return quantity; }
