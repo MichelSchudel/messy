@@ -2,6 +2,7 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.application.domain.Order;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,22 +50,22 @@ class OrderFlowSpringBootIT {
                         .withBody("true")));
 
         // Act 1: place order via HTTP
-        OrderEntity created = restClient.post()
+        Order created = restClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/orders")
                         .queryParam("productId", productId)
                         .queryParam("quantity", 2)
                         .build())
                 .retrieve()
-                .body(OrderEntity.class);
+                .body(Order.class);
 
         assertThat(created).isNotNull();
-        assertThat(created.getId()).isNotNull();
-        assertThat(created.getStatus()).isEqualTo("CREATED");
+        assertThat(created.id()).isNotNull();
+        assertThat(created.status()).isEqualTo("CREATED");
 
         // Act 2: publish payment confirmation
         StatusUpdateMessage msg = new StatusUpdateMessage();
-        msg.setOrderId(created.getId());
+        msg.setOrderId(created.id());
         msg.setStatusUpdate("CONFIRMED");
 
         kafkaTemplate.send(
@@ -76,7 +77,7 @@ class OrderFlowSpringBootIT {
                 .pollInterval(Duration.ofMillis(200))
                 .untilAsserted(() -> {
                     OrderEntity reloaded =
-                            orderRepository.findById(created.getId()).orElseThrow();
+                            orderRepository.findById(created.id()).orElseThrow();
                     assertThat(reloaded.getStatus()).isEqualTo("DONE");
                 });
     }
