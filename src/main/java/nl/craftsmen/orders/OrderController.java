@@ -1,6 +1,7 @@
 package nl.craftsmen.orders;
 
 import nl.craftsmen.orders.application.OrderService;
+import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderEntity placeOrder(@RequestParam String productId,
-                                  @RequestParam int quantity) {
+    public Order placeOrder(@RequestParam String productId,
+                            @RequestParam int quantity) {
 
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
@@ -33,7 +34,7 @@ public class OrderController {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-        OrderEntity saved = orderService.placeOrder(productId, quantity);
+        Order saved = orderService.placeOrder(productId, quantity);
 
         return saved;
 

@@ -2,6 +2,7 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.OrderEntity;
 import nl.craftsmen.orders.OrderRepository;
+import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +22,7 @@ public class OrderService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public OrderEntity placeOrder(String productId, int quantity) {
+    public Order placeOrder(String productId, int quantity) {
 
         Boolean inStock = restTemplate.getForObject(
                 "http://localhost:8089/api/stock/" + productId,
@@ -43,7 +44,7 @@ public class OrderService {
         saved.setStatus("CREATED");
 
         kafkaTemplate.send("orders.created", saved);
-        return saved;
+        return mapFromOrderEntity(saved);
     }
 
     public void setStatusAndUpdate(OrderEntity orderEntity, String statusUpdate) {
@@ -51,5 +52,15 @@ public class OrderService {
                 "IN_PROGRESS", "PENDING");
         orderEntity.setStatus(statusMap.get(statusUpdate));
         repository.save(orderEntity);
+    }
+
+    private Order mapFromOrderEntity(OrderEntity orderEntity) {
+        return new Order(
+                orderEntity.getId(),
+                orderEntity.getProductId(),
+                orderEntity.getQuantity(),
+                orderEntity.getTotalPrice(),
+                orderEntity.getStatus()
+        );
     }
 }
