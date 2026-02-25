@@ -1,5 +1,6 @@
 package nl.craftsmen.orders;
 
+import nl.craftsmen.orders.adapters.controllers.OrderDto;
 import nl.craftsmen.orders.application.OrderService;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +11,17 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderRepository repository;
     private final OrderService orderService;
 
     public OrderController(
             OrderRepository repository,
             OrderService orderService
     ) {
-        this.repository = repository;
         this.orderService = orderService;
     }
 
     @PostMapping
-    public Order placeOrder(@RequestParam String productId,
+    public OrderDto placeOrder(@RequestParam String productId,
                             @RequestParam int quantity) {
 
         if (quantity <= 0) {
@@ -36,13 +35,24 @@ public class OrderController {
 
         Order saved = orderService.placeOrder(productId, quantity);
 
-        return saved;
+        return this.mapToDto(saved);
 
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orderService.getAllOrders();
+    public List<OrderDto> getAllOrders() {
+        return orderService.getAllOrders().stream().map(this::mapToDto).toList();
+
+    }
+
+    private OrderDto mapToDto(Order order) {
+        return new OrderDto(
+             order.id(),
+             order.productId(),
+             order.quantity(),
+             order.totalPrice(),
+             order.status()
+        );
     }
 
 }
