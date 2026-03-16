@@ -4,6 +4,7 @@ import nl.craftsmen.orders.adapters.repositories.OrderEntity;
 import nl.craftsmen.orders.adapters.repositories.OrderRepository;
 import nl.craftsmen.orders.adapters.restclient.StockInformation;
 import nl.craftsmen.orders.adapters.restclient.StockRequest;
+import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -58,7 +59,6 @@ public class OrderService {
 
         OrderEntity saved = repository.save(order);
 
-        saved.setStatus("CREATED");
         return createOrder(saved);
     }
 
@@ -66,7 +66,11 @@ public class OrderService {
         return new OrderCreatedDto(order.getId(), order.getStatus());
     }
 
-    public List<OrderEntity> getAllOrders() {
-        return repository.findAll();
+    public List<Order> getAllOrders() {
+        return repository.findAll().stream().map(this::fromOrderEntity).toList();
+    }
+
+    private Order fromOrderEntity(OrderEntity entity) {
+        return new Order(entity.getId(), entity.getProductId(), entity.getQuantity(), entity.getTotalPrice(), entity.getStatus());
     }
 }

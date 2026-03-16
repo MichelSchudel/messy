@@ -1,21 +1,12 @@
 package nl.craftsmen.orders.adapters.controller;
 
 import jakarta.validation.constraints.Min;
-import nl.craftsmen.orders.adapters.repositories.OrderEntity;
-import nl.craftsmen.orders.adapters.repositories.OrderRepository;
-import nl.craftsmen.orders.adapters.restclient.StockInformation;
-import nl.craftsmen.orders.adapters.restclient.StockRequest;
 import nl.craftsmen.orders.application.OrderCreatedDto;
 import nl.craftsmen.orders.application.OrderService;
-import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Value;
+import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
-
-import static nl.craftsmen.orders.adapters.restclient.StockAvailabilityType.CODE0;
 
 @RestController
 @RequestMapping("/orders")
@@ -30,17 +21,20 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderCreatedDto placeOrder(@RequestParam String productId,
-                                      @RequestParam @Min(1) int quantity) {
+    public OrderCreatedWebResponse placeOrder(@RequestParam String productId,
+                                              @RequestParam @Min(1) int quantity) {
 
         OrderCreatedDto saved = service.createOrder(productId, quantity);
-        return saved;
+        return fromOrderCreatedDto(saved);
 
     }
 
+    private OrderCreatedWebResponse fromOrderCreatedDto(OrderCreatedDto dto) {
+        return new OrderCreatedWebResponse(dto.id(), "CREATED");
+    }
 
     @GetMapping
-    public List<OrderEntity> getAllOrders() {
+    public List<Order> getAllOrders() {
         return service.getAllOrders();
     }
 
