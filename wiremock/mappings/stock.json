@@ -1,11 +1,14 @@
 {
   "request": {
-    "method": "GET",
+    "method": "POST",
     "urlPattern": "/api/stock/.*"
   },
   "response": {
     "status": 200,
-    "body": "true",
+    "jsonBody": {
+      "articleId": "123",
+      "stockAvailability": "CODE0"
+    },
     "headers": {
       "Content-Type": "application/json"
     }
