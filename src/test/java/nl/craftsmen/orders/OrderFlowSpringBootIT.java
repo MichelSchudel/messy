@@ -2,6 +2,9 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.adapters.restclient.StockAvailabilityType;
+import nl.craftsmen.orders.adapters.restclient.StockInformation;
+import nl.craftsmen.orders.application.OrderCreatedDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +49,7 @@ class OrderFlowSpringBootIT {
         );
 
         //place order via HTTP
-        OrderEntity created = restClient
+        OrderCreatedDto created = restClient
                 .post()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -55,12 +58,12 @@ class OrderFlowSpringBootIT {
                                 .queryParam("quantity", 2)
                                 .build())
                 .retrieve()
-                .body(OrderEntity.class);
+                .body(OrderCreatedDto.class);
 
         //assert
         assertThat(created).isNotNull();
-        assertThat(created.getId()).isNotNull();
-        assertThat(created.getStatus()).isEqualTo("CREATED");
+        assertThat(created.id()).isNotNull();
+        assertThat(created.status()).isEqualTo("CREATED");
 
     }
 }

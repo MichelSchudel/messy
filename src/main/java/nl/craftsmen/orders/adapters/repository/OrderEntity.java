@@ -1,4 +1,4 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.repository;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
