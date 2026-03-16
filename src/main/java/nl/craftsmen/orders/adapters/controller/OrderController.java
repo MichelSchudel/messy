@@ -1,9 +1,11 @@
 package nl.craftsmen.orders.adapters.controller;
 
+import jakarta.validation.constraints.Min;
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
 import nl.craftsmen.orders.adapters.repositories.OrderRepository;
 import nl.craftsmen.orders.adapters.restclient.StockInformation;
 import nl.craftsmen.orders.adapters.restclient.StockRequest;
+import nl.craftsmen.orders.application.OrderCreatedDto;
 import nl.craftsmen.orders.application.OrderService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,10 +30,10 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderEntity placeOrder(@RequestParam String productId,
-                                  @RequestParam int quantity) {
+    public OrderCreatedDto placeOrder(@RequestParam String productId,
+                                      @RequestParam @Min(1) int quantity) {
 
-        OrderEntity saved = service.createOrder(productId, quantity);
+        OrderCreatedDto saved = service.createOrder(productId, quantity);
         return saved;
 
     }

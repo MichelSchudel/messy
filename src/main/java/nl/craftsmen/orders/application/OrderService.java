@@ -27,7 +27,7 @@ public class OrderService {
         this.repository = repository;
     }
 
-    public OrderEntity createOrder(String productId, int quantity) {
+    public OrderCreatedDto createOrder(String productId, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
@@ -59,9 +59,12 @@ public class OrderService {
         OrderEntity saved = repository.save(order);
 
         saved.setStatus("CREATED");
-        return saved;
+        return createOrder(saved);
     }
 
+    private OrderCreatedDto createOrder(OrderEntity order) {
+        return new OrderCreatedDto(order.getId(), order.getStatus());
+    }
 
     public List<OrderEntity> getAllOrders() {
         return repository.findAll();
