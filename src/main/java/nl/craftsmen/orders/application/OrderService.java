@@ -1,11 +1,9 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.application;
 
+import nl.craftsmen.orders.adapters.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.Map;
 
 @Service
 public class OrderService {

@@ -1,4 +1,4 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

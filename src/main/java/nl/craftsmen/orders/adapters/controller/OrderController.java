@@ -1,5 +1,10 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.controller;
 
+import nl.craftsmen.orders.adapters.repositories.OrderEntity;
+import nl.craftsmen.orders.adapters.repositories.OrderRepository;
+import nl.craftsmen.orders.adapters.restclient.StockInformation;
+import nl.craftsmen.orders.adapters.restclient.StockRequest;
+import nl.craftsmen.orders.application.OrderService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -7,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static nl.craftsmen.orders.StockAvailabilityType.CODE0;
+import static nl.craftsmen.orders.adapters.restclient.StockAvailabilityType.CODE0;
 
 @RestController
 @RequestMapping("/orders")

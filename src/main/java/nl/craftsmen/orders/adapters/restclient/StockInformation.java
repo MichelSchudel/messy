@@ -1,4 +1,4 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapters.restclient;
 
 public record StockInformation(
         String articleId,
