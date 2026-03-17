@@ -1,7 +1,6 @@
 package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
-import nl.craftsmen.orders.adapters.repositories.OrderPostgresRepository;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +11,11 @@ import java.util.List;
 public class OrderService {
 
     private final StockAvailabilityProvider stockAvailabilityProvider;
-    private final OrderPostgresRepository orderPostgresRepository;
+    private final OrderProvider orderProvider;
 
-    public OrderService(StockAvailabilityProvider stockAvailabilityProvider, OrderPostgresRepository orderPostgresRepository) {
+    public OrderService(StockAvailabilityProvider stockAvailabilityProvider, OrderProvider orderProvider) {
         this.stockAvailabilityProvider = stockAvailabilityProvider;
-        this.orderPostgresRepository = orderPostgresRepository;
+        this.orderProvider = orderProvider;
     }
 
     public OrderCreatedDto createOrder(String productId, int quantity) {
@@ -37,7 +36,7 @@ public class OrderService {
                 BigDecimal.TEN,
                 "OPEN"
         );
-        Order saved = orderPostgresRepository.save(order);
+        Order saved = orderProvider.save(order);
 
         return createOrder(saved);
     }
@@ -47,7 +46,7 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-        return orderPostgresRepository.findAll();
+        return orderProvider.findAll();
     }
 
     private Order fromOrderEntity(OrderEntity entity) {

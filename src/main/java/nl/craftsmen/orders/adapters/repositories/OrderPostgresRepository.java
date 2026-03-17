@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public class OrderPostgresRepository {
+public class OrderPostgresRepository implements nl.craftsmen.orders.application.OrderProvider {
 
     private final OrderJpaRepository orderJpaRepository;
 
@@ -15,6 +15,7 @@ public class OrderPostgresRepository {
         this.orderJpaRepository = orderJpaRepository;
     }
 
+    @Override
     public Order save(Order order) {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setProductId(order.productId());
@@ -30,6 +31,7 @@ public class OrderPostgresRepository {
         return new Order(entity.getId(), entity.getProductId(), entity.getQuantity(), entity.getTotalPrice(), entity.getStatus());
     }
 
+    @Override
     public List<Order> findAll() {
         return orderJpaRepository.findAll().stream().map(this::fromOrderEntity).toList();
     }
