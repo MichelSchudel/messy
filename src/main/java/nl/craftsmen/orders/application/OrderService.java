@@ -2,7 +2,6 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
 import nl.craftsmen.orders.adapters.repositories.OrderRepository;
-import nl.craftsmen.orders.adapters.restclient.StockAvailabilityRestClient;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +11,21 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    private final StockAvailabilityRestClient stockAvailabilityRestClient;
+    private final StockAvailabilityProvider stockAvailabilityProvider;
     private final OrderRepository repository;
 
-    public OrderService(StockAvailabilityRestClient stockAvailabilityRestClient, OrderRepository repository) {
-        this.stockAvailabilityRestClient = stockAvailabilityRestClient;
+    public OrderService(StockAvailabilityProvider stockAvailabilityProvider, OrderRepository repository) {
+        this.stockAvailabilityProvider = stockAvailabilityProvider;
         this.repository = repository;
     }
 
     public OrderCreatedDto createOrder(String productId, int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-
 
         if (quantity > 100) {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-
-        boolean inStockNow = stockAvailabilityRestClient.isInStock(productId, quantity);
+        boolean inStockNow = stockAvailabilityProvider.isInStock(productId, quantity);
         if (!inStockNow) {
             throw new RuntimeException("Product not in stock");
         }

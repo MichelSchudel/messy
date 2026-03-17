@@ -5,13 +5,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class StockAvailabilityRestClient {
+public class StockAvailabilityRestClient implements nl.craftsmen.orders.application.StockAvailabilityProvider {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${stock.base-url}")
     private String stockBaseUrl;
 
+    @Override
     public boolean isInStock(String productId, int quantity) {
         StockInformation inStock = restTemplate.postForObject(
                 stockBaseUrl + "/api/stock/" + productId,
