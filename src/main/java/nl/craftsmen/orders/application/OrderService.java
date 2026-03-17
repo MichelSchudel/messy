@@ -2,29 +2,21 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
 import nl.craftsmen.orders.adapters.repositories.OrderRepository;
-import nl.craftsmen.orders.adapters.restclient.StockInformation;
-import nl.craftsmen.orders.adapters.restclient.StockRequest;
+import nl.craftsmen.orders.adapters.restclient.StockAvailabilityRestClient;
 import nl.craftsmen.orders.application.domain.Order;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static nl.craftsmen.orders.adapters.restclient.StockAvailabilityType.CODE0;
-
 @Service
 public class OrderService {
 
+    private final StockAvailabilityRestClient stockAvailabilityRestClient;
     private final OrderRepository repository;
-    private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${stock.base-url}")
-    private String stockBaseUrl;
-
-
-    public OrderService(OrderRepository repository) {
+    public OrderService(StockAvailabilityRestClient stockAvailabilityRestClient, OrderRepository repository) {
+        this.stockAvailabilityRestClient = stockAvailabilityRestClient;
         this.repository = repository;
     }
 
@@ -38,16 +30,9 @@ public class OrderService {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-        StockInformation inStock = restTemplate.postForObject(
-                stockBaseUrl + "/api/stock/" + productId,
-                new StockRequest(
-                        productId,
-                        quantity
-                ),
-                StockInformation.class
-        );
 
-        if (inStock == null || inStock.stockAvailability() != CODE0) {
+        boolean inStockNow = stockAvailabilityRestClient.isInStock(productId, quantity);
+        if (!inStockNow) {
             throw new RuntimeException("Product not in stock");
         }
 
