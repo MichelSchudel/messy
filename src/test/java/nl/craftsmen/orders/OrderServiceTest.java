@@ -1,6 +1,6 @@
 package nl.craftsmen.orders;
 
-import nl.craftsmen.orders.adapters.repositories.OrderRepository;
+import nl.craftsmen.orders.adapters.repositories.OrderJpaRepository;
 import nl.craftsmen.orders.application.OrderService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 class OrderServiceTest {
 
     @Mock
-    private OrderRepository repository;
+    private OrderJpaRepository repository;
 
     @InjectMocks
     private OrderService service;

@@ -1,7 +1,7 @@
 package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.adapters.repositories.OrderEntity;
-import nl.craftsmen.orders.adapters.repositories.OrderRepository;
+import nl.craftsmen.orders.adapters.repositories.OrderPostgresRepository;
 import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import java.util.List;
 public class OrderService {
 
     private final StockAvailabilityProvider stockAvailabilityProvider;
-    private final OrderRepository repository;
+    private final OrderPostgresRepository orderPostgresRepository;
 
-    public OrderService(StockAvailabilityProvider stockAvailabilityProvider, OrderRepository repository) {
+    public OrderService(StockAvailabilityProvider stockAvailabilityProvider, OrderPostgresRepository orderPostgresRepository) {
         this.stockAvailabilityProvider = stockAvailabilityProvider;
-        this.repository = repository;
+        this.orderPostgresRepository = orderPostgresRepository;
     }
 
     public OrderCreatedDto createOrder(String productId, int quantity) {
@@ -30,23 +30,24 @@ public class OrderService {
             throw new RuntimeException("Product not in stock");
         }
 
-        OrderEntity order = new OrderEntity();
-        order.setProductId(productId);
-        order.setQuantity(quantity);
-        order.setTotalPrice(BigDecimal.valueOf(quantity * 10));
-        order.setStatus("OPEN");
-
-        OrderEntity saved = repository.save(order);
+        Order order = new Order(
+                null,
+                productId,
+                quantity,
+                BigDecimal.TEN,
+                "OPEN"
+        );
+        Order saved = orderPostgresRepository.save(order);
 
         return createOrder(saved);
     }
 
-    private OrderCreatedDto createOrder(OrderEntity order) {
-        return new OrderCreatedDto(order.getId(), order.getStatus());
+    private OrderCreatedDto createOrder(Order order) {
+        return new OrderCreatedDto(order.id(), order.status());
     }
 
     public List<Order> getAllOrders() {
-        return repository.findAll().stream().map(this::fromOrderEntity).toList();
+        return orderPostgresRepository.findAll();
     }
 
     private Order fromOrderEntity(OrderEntity entity) {
