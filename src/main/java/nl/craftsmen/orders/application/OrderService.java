@@ -2,8 +2,8 @@ package nl.craftsmen.orders.application;
 
 import nl.craftsmen.orders.adapter.inbound.controller.OrderEntity;
 import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
+import nl.craftsmen.orders.adapter.outbound.stock.StockAdapter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,10 +12,11 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository repository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final StockAdapter stockAdapter;
 
-    public OrderService(OrderRepository repository) {
+    public OrderService(OrderRepository repository, StockAdapter stockAdapter) {
         this.repository = repository;
+        this.stockAdapter = stockAdapter;
     }
 
     public OrderDto placeOrder(String productId, int quantity) {
@@ -24,13 +25,7 @@ public class OrderService {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-
-        Boolean inStock = restTemplate.getForObject(
-                "http://localhost:8089/api/stock/" + productId,
-                Boolean.class
-        );
-
-        if (inStock == null || !inStock) {
+        if (!stockAdapter.isInStock(productId)) {
             throw new RuntimeException("Product not in stock");
         }
 

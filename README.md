@@ -54,3 +54,10 @@ Also create the function in the service.
 Both functions in the OrderService return the OrderEntity to the controller.
 Replace the return type with an OrderDto record that is then mapped from the entity.
 
+n the order controller, map the orderDto to an OrderResponse record class and use this type as the return type.
+
+wrap the restTemplate call in a separate Rest adapter component class
+and let the OrderService make use of this component class.
+Also move the inStock check there.
+The function in this class should now just return a boolean if a product is in stock.
+
