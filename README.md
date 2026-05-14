@@ -61,3 +61,12 @@ and let the OrderService make use of this component class.
 Also move the inStock check there.
 The function in this class should now just return a boolean if a product is in stock.
 
+Extract an interface from the StockAdapter and use that in the OrderService.
+
+Now refactor the OrderRepository interface into a Spring Repository
+component called  "OrderRepository".
+Rename the interface to OrderJpaRepository.
+Let the new repository component return not the entities,
+but a domain class called Order (which is a record),
+so the OrderService doesn't know about the entities anymore.
+Do the mapping inside the new repository component.
