@@ -1,6 +1,5 @@
 package nl.craftsmen.orders.application;
 
-import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -9,11 +8,11 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    private final OrderRepository repository;
+    private final OrderStore orderStore;
     private final StockProvider stockProvider;
 
-    public OrderService(OrderRepository repository, StockProvider stockProvider) {
-        this.repository = repository;
+    public OrderService(OrderStore orderStore, StockProvider stockProvider) {
+        this.orderStore = orderStore;
         this.stockProvider = stockProvider;
     }
 
@@ -28,13 +27,13 @@ public class OrderService {
         }
 
         Order order = new Order(null, productId, quantity, BigDecimal.valueOf(quantity * 10), "OPEN");
-        Order saved = repository.save(order);
+        Order saved = orderStore.save(order);
 
         return toDto(saved);
     }
 
     public List<OrderDto> getAllOrders() {
-        return repository.findAll().stream().map(this::toDto).toList();
+        return orderStore.findAll().stream().map(this::toDto).toList();
     }
 
     private OrderDto toDto(Order order) {

@@ -70,3 +70,6 @@ Let the new repository component return not the entities,
 but a domain class called Order (which is a record),
 so the OrderService doesn't know about the entities anymore.
 Do the mapping inside the new repository component.
+
+Extract an interface from the new repository component so the OrderService can depend on that.
+

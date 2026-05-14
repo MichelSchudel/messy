@@ -2,12 +2,13 @@ package nl.craftsmen.orders.adapter.outbound.repository;
 
 import nl.craftsmen.orders.adapter.inbound.controller.OrderEntity;
 import nl.craftsmen.orders.application.Order;
+import nl.craftsmen.orders.application.OrderStore;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class OrderRepository {
+public class OrderRepository implements OrderStore {
 
     private final OrderJpaRepository jpaRepository;
 
