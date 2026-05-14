@@ -1,5 +1,7 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.adapter.inbound.controller;
 
+import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
+import nl.craftsmen.orders.application.OrderService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,5 +1,7 @@
-package nl.craftsmen.orders;
+package nl.craftsmen.orders.application;
 
+import nl.craftsmen.orders.adapter.inbound.controller.OrderEntity;
+import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

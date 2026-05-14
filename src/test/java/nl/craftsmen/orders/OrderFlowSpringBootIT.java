@@ -2,6 +2,8 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import nl.craftsmen.orders.adapter.inbound.controller.OrderEntity;
+import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
