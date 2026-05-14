@@ -20,6 +20,11 @@ public class OrderService {
 
     public OrderDto placeOrder(String productId, int quantity) {
 
+        if (quantity > 100) {
+            throw new IllegalArgumentException("Quantity cannot be bigger than 100");
+        }
+
+
         Boolean inStock = restTemplate.getForObject(
                 "http://localhost:8089/api/stock/" + productId,
                 Boolean.class

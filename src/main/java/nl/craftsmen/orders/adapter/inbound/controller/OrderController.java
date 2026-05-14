@@ -1,5 +1,6 @@
 package nl.craftsmen.orders.adapter.inbound.controller;
 
+import jakarta.validation.constraints.Min;
 import nl.craftsmen.orders.application.OrderDto;
 import nl.craftsmen.orders.application.OrderService;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +19,7 @@ public class OrderController {
 
     @PostMapping
     public OrderResponse placeOrder(@RequestParam String productId,
-                                    @RequestParam int quantity) {
-
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-
-        if (quantity > 100) {
-            throw new IllegalArgumentException("Quantity cannot be bigger than 100");
-        }
+                                    @RequestParam  @Min(1) int quantity) {
 
         return toResponse(orderService.placeOrder(productId, quantity));
     }
