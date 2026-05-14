@@ -1,10 +1,11 @@
-package nl.craftsmen.orders.adapter.outbound.stock;
+package nl.craftsmen.orders.adapter.outbound.rest;
 
+import nl.craftsmen.orders.application.StockProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class StockAdapter {
+public class StockAdapter implements StockProvider {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
