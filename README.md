@@ -47,3 +47,10 @@
    * Create OrderRepository class in the right adapter package.
    * Do the mapping from OrderEntity to Order and vice versa in that class.
    
+## Prompts
+Replace the repository call in getAllOrders in the OrderController to a call to the OrderService.
+Also create the function in the service.
+
+Both functions in the OrderService return the OrderEntity to the controller.
+Replace the return type with an OrderDto record that is then mapped from the entity.
+

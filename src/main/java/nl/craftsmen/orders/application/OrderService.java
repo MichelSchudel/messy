@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -17,7 +18,7 @@ public class OrderService {
         this.repository = repository;
     }
 
-    public OrderEntity placeOrder(String productId, int quantity) {
+    public OrderDto placeOrder(String productId, int quantity) {
 
         Boolean inStock = restTemplate.getForObject(
                 "http://localhost:8089/api/stock/" + productId,
@@ -36,9 +37,15 @@ public class OrderService {
 
         OrderEntity saved = repository.save(order);
 
-        saved.setStatus("CREATED");
+        return toDto(saved);
+    }
 
-        return saved;
+    public List<OrderDto> getAllOrders() {
+        return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    private OrderDto toDto(OrderEntity entity) {
+        return new OrderDto(entity.getId(), entity.getProductId(), entity.getQuantity(), entity.getTotalPrice(), "CREATED");
     }
 
 }
