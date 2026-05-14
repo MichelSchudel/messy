@@ -17,8 +17,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderDto placeOrder(@RequestParam String productId,
-                               @RequestParam int quantity) {
+    public OrderResponse placeOrder(@RequestParam String productId,
+                                    @RequestParam int quantity) {
 
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
@@ -28,12 +28,16 @@ public class OrderController {
             throw new IllegalArgumentException("Quantity cannot be bigger than 100");
         }
 
-        return orderService.placeOrder(productId, quantity);
+        return toResponse(orderService.placeOrder(productId, quantity));
     }
 
     @GetMapping
-    public List<OrderDto> getAllOrders() {
-        return orderService.getAllOrders();
+    public List<OrderResponse> getAllOrders() {
+        return orderService.getAllOrders().stream().map(this::toResponse).toList();
+    }
+
+    private OrderResponse toResponse(OrderDto dto) {
+        return new OrderResponse(dto.id(), dto.productId(), dto.quantity(), dto.totalPrice(), dto.status());
     }
 
 }
