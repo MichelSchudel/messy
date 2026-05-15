@@ -1,4 +1,4 @@
-package nl.craftsmen.orders.application;
+package nl.craftsmen.orders.application.domain;
 
 import java.math.BigDecimal;
 

@@ -1,5 +1,7 @@
 package nl.craftsmen.orders.application;
 
+import nl.craftsmen.orders.application.domain.Order;
+
 import java.util.List;
 
 public interface OrderStore {

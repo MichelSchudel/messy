@@ -1,6 +1,10 @@
-package nl.craftsmen.orders.adapter.inbound.controller;
+package nl.craftsmen.orders.adapter.outbound.repository;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.math.BigDecimal;
 
 @Entity

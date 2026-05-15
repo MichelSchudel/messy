@@ -1,5 +1,6 @@
 package nl.craftsmen.orders.application;
 
+import nl.craftsmen.orders.application.domain.Order;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

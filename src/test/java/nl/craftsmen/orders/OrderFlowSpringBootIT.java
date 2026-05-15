@@ -2,7 +2,7 @@ package nl.craftsmen.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import nl.craftsmen.orders.adapter.inbound.controller.OrderEntity;
+import nl.craftsmen.orders.adapter.outbound.repository.OrderEntity;
 import nl.craftsmen.orders.adapter.outbound.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,8 @@ class OrderFlowSpringBootIT {
     @Autowired
     private OrderRepository orderRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Test
-    void placesOrder_thenPaymentStatusUpdateTopicConfirmsIt() throws Exception {
+    void placesOrder_thenPaymentStatusUpdateTopicConfirmsIt() {
 
         RestClient restClient = RestClient.builder()
                 .baseUrl("http://localhost:" + port)
